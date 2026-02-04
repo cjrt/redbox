@@ -10,4 +10,6 @@ void renderer_draw(void);
 // free resources
 void renderer_shutdown(void);
 
+unsigned int renderer_get_shader_program(void);
+
 #endif
