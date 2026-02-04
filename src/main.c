@@ -1,65 +1,32 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include "window.h"
+#include "renderer.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
 
-const unsigned int SCREENWIDTH = 800;
-const unsigned int SCREENHEIGHT = 600;
-
-int main()
+int main(void)
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    Window window;
 
-    GLFWwindow* window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "Greybox", NULL, NULL);
-    if (window == NULL)
-    {
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        return -1;
+    if (!window_create(&window, 800, 600, "GLFW + GLAD")) {
+        return 1;
     }
 
-    while (!glfwWindowShouldClose(window))
-    {
-        // input
-        // -----
-        processInput(window);
+    renderer_init();
 
-        // render
-        // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    while (!window_should_close(&window)) {
+        glClearColor(0.08f, 0.08f, 0.12f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        renderer_draw();
+
+        window_update(&window);
     }
 
-    glfwTerminate();
+    renderer_shutdown();
+    window_destroy(&window);
     return 0;
-}
-
-void processInput(GLFWwindow *window)
-{
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }
