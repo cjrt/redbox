@@ -1,8 +1,8 @@
 CC = clang
-OUTPUT = engine
-SOURCES = main.c glad.c
-INCLUDES = -Iinclude          # path to GLAD and GLFW headers
-LIBS = -lglfw -ldl -lm -lGL   # Linux: link GLFW, OpenGL, math, dynamic loader
+OUTPUT = greybox
+SOURCES = src/main.c src/glad.c
+INCLUDES = -Iinclude
+LIBS = -lglfw -ldl -lm -lGL
 
 .PHONY: all clean
 
