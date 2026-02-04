@@ -11,7 +11,7 @@
 
 int main(void){
     Window window;
-    if(!window_create(&window,800,600,"Rotating Cube")) return 1;
+    if(!window_create(&window,1920,1080,"Rotating Cube")) return 1;
 
     if(!renderer_init()) return 1;
 
@@ -25,7 +25,7 @@ int main(void){
     vec3 cubePositions[10] = {
         {0.0f,0.0f,0.0f}, {2.0f,5.0f,-15.0f}, {-1.5f,-2.2f,-2.5f}, {-3.8f,-2.0f,-12.3f},
         {2.4f,-0.4f,-3.5f}, {-1.7f,3.0f,-7.5f}, {1.3f,-2.0f,-2.5f}, {1.5f,2.0f,-2.5f},
-        {1.5f,0.2f,-1.5f}, {-1.3f,1.0f,-1.5f}
+        {1.5f,0.2f,-1.5f}, {-1.1f,-1.4f,1.2f}
     };
 
     // Setup projection & view matrices
