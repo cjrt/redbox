@@ -7,15 +7,13 @@
 #include "renderer.h"
 #include "texture.h"
 #include "camera.h"
+#include "time.h"
 #include <cglm/cglm.h>
 
 Camera camera;
 float lastX = 800.0f / 2.0f;
 float lastY = 600.0f / 2.0f;
 bool firstMouse = true;
-
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
 
 // Mouse callback
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -37,17 +35,17 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 void process_input(GLFWwindow* win) {
     if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_FORWARD, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_FORWARD, time_get_delta());
     if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_BACKWARD, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_BACKWARD, time_get_delta());
     if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_LEFT, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_LEFT, time_get_delta());
     if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_RIGHT, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_RIGHT, time_get_delta());
     if (glfwGetKey(win, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_UP, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_UP, time_get_delta());
     if (glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera_process_keyboard(&camera, CAMERA_DOWN, deltaTime);
+        camera_process_keyboard(&camera, CAMERA_DOWN, time_get_delta());
 }
 
 int main(void){
@@ -83,8 +81,8 @@ int main(void){
 
     while(!window_should_close(&window)){
         float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+		time_update();
+    	float deltaTime = time_get_delta();
 
         process_input(window.handle);
 
