@@ -1,8 +1,8 @@
 CC      = clang
 CFLAGS  = -Wall -Wextra -std=c11
-INCLUDES= -Iinclude
+INCLUDES= -Iinclude $(shell pkg-config --cflags assimp)   # add assimp includes
 
-LIBS    = -lglfw -ldl -lm -lGL
+LIBS    = -lglfw -ldl -lm -lGL $(shell pkg-config --libs assimp)   # add assimp libs
 
 SRC_DIR = src
 OBJ_DIR = build

@@ -8,12 +8,16 @@
 #include "camera.h"
 #include "time.h"
 #include "mesh.h"
+#include "model.h"
 #include <cglm/cglm.h>
 
 Camera camera;
 float lastX = 800.0f / 2.0f;
 float lastY = 600.0f / 2.0f;
 bool firstMouse = true;
+
+static bool wireframe = false;
+static bool wireframeKeyPressed = false;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     (void)window;
@@ -29,6 +33,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     camera_process_mouse(&camera, xoffset, yoffset, true);
 }
 
+float groundHeight = 0.0f; // y-coordinate of the floor
+float playerHeight = 1.8f; // camera height above the ground
+
 void process_input(GLFWwindow* win, float deltaTime, float roomW, float roomH, float roomD){
     if(glfwGetKey(win, GLFW_KEY_W)==GLFW_PRESS) camera_process_keyboard(&camera,CAMERA_FORWARD,deltaTime);
     if(glfwGetKey(win, GLFW_KEY_S)==GLFW_PRESS) camera_process_keyboard(&camera,CAMERA_BACKWARD,deltaTime);
@@ -37,8 +44,23 @@ void process_input(GLFWwindow* win, float deltaTime, float roomW, float roomH, f
     if(glfwGetKey(win, GLFW_KEY_SPACE)==GLFW_PRESS) camera_process_keyboard(&camera,CAMERA_UP,deltaTime);
     if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT)==GLFW_PRESS) camera_process_keyboard(&camera,CAMERA_DOWN,deltaTime);
 
+    // Toggle wireframe with F1
+    if(glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !wireframeKeyPressed) {
+        wireframe = !wireframe;
+        wireframeKeyPressed = true;
+
+        if(wireframe)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    if(glfwGetKey(win, GLFW_KEY_F1) == GLFW_RELEASE) {
+        wireframeKeyPressed = false;
+    }
+
     camera.Position[0] = fmax(-roomW/2 + 0.5f, fmin(camera.Position[0], roomW/2 - 0.5f));
-    camera.Position[1] = fmax(0.5f, fmin(camera.Position[1], roomH - 0.5f));
+    camera.Position[1] = groundHeight + playerHeight - 1;
     camera.Position[2] = fmax(-roomD/2 + 0.5f, fmin(camera.Position[2], roomD/2 - 0.5f));
 }
 
@@ -55,14 +77,21 @@ int main(void){
 
     Texture floorTex, wallTex, cubeTex;
     if(!texture_load(&floorTex,"assets/grass.png")) { fprintf(stderr,"Failed to load floor\n"); return 1; }
-    if(!texture_load(&wallTex,"assets/wall.png")) { fprintf(stderr,"Failed to load wall\n"); return 1; }
+    if(!texture_load(&wallTex,"assets/wall.jpg")) { fprintf(stderr,"Failed to load wall\n"); return 1; }
     if(!texture_load(&cubeTex,"assets/cube.png")) { fprintf(stderr,"Failed to load cube\n"); return 1; }
 
     Mesh cubeMesh, planeMesh;
     mesh_init_cube(&cubeMesh);
     mesh_init_plane(&planeMesh, 1.0f, 1.0f, 1); // unit plane, scale in model
 
-    float roomW = 10.0f, roomD = 10.0f, roomH = 5.0f;
+	Model chair;
+	if(!model_load(&chair,"assets/source/Chair_Pack/Chair_Pack.obj")){
+    	fprintf(stderr,"Failed to load chair model\n");
+    	return 1;
+	}
+
+	// x,z,y
+    float roomW = 30.0f, roomD = 30.0f, roomH = 5.0f;
 
     vec3 cubePositions[5] = {
         {2.0f,0.5f,-2.0f},
@@ -94,6 +123,13 @@ int main(void){
         renderer_set_view(view);
 
         mat4 model;
+
+		mat4 modelMat;
+		glm_mat4_identity(modelMat);
+		glm_translate(modelMat,(vec3){1.0f,0.0f,-1.0f});
+		glm_scale(modelMat,(vec3){0.5f,0.5f,0.5f}); // scale chair
+		renderer_set_model(modelMat);
+		model_draw(&chair);
 
         glm_mat4_identity(model);
         glm_scale(model,(vec3){roomW,0.01f,roomD});
@@ -167,6 +203,7 @@ int main(void){
 
     mesh_destroy(&cubeMesh);
     mesh_destroy(&planeMesh);
+	model_destroy(&chair);
     texture_destroy(&floorTex);
     texture_destroy(&wallTex);
     texture_destroy(&cubeTex);

@@ -1,0 +1,50 @@
+# Blender MTL File: 'Chairs.blend'
+# Material Count: 4
+
+newmtl Chair4
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.135153 0.158255 0.457531
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump chair4\\Chair4_Normal.png
+map_Kd chair4\\Chair4_Albedo.png
+map_Ns chair4\\Chair4_Roughness.png
+refl chair4\\Chair4_Metalness.png
+
+newmtl Color3
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump Chair1\\Chair1_Normal.png
+map_Kd Chair1\\Chair1_Albedo.png
+map_Ns Chair1\\Chair1_Roughness.png
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl chair2
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.046169 0.030582
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump Chair2\\Chair2_Normal.png
+map_Kd Chair2\\Chair2_Albedo.png
+map_Ns Chair2\\Chair2_Roughness.png
