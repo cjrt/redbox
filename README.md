@@ -2,6 +2,8 @@
 
 GLFW/GLAD sandbox engine written in C. 
 
+This entire project is an elaborate ruse for me to do a lot of math.
+
 ## Resources & Dependencies 
 
 [LearnOpenGL](https://learnopengl.com/Introduction)
