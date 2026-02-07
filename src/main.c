@@ -107,6 +107,10 @@ int main(void){
 
     unsigned int shader = renderer_get_shader_program();
     glUseProgram(shader);
+
+	int lightPosLoc = glGetUniformLocation(shader, "lightPos");
+	glUniform3f(lightPosLoc, 2.0f, 4.0f, 2.0f);
+
     glUniform1i(glGetUniformLocation(shader,"uTexture"),0);
 
     while(!window_should_close(&window)){
