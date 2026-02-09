@@ -6,9 +6,7 @@
 
 // A simple mesh structure
 typedef struct {
-    GLuint VAO;
-    GLuint VBO;
-    GLuint EBO;
+    GLuint VAO, VBO, EBO;
     int vertexCount;
     int indexCount;
 } Mesh;

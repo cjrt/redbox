@@ -4,6 +4,18 @@
 #include "texture.h"
 #include <stdio.h>
 
+/*
+
+   the texture module should only load, store, bind, and unbind textures
+
+   OWNS: GPU texture object
+
+   input: image file or pixel data
+   output: GPU texture ID, ready to bind
+
+*/
+
+
 bool texture_load(Texture *texture, const char *path)
 {
     stbi_set_flip_vertically_on_load(0); // Flip vertically: OpenGL origin is bottom-left

@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include <cglm/cglm.h>
 
+/*
+
+   the mesh module should only manage vertex/index buffers and know how to draw itself
+   it should NOT own textures, shaders, or camera data
+   it should NOT decide when or how it is drawn, only provide a GPU-ready representation
+
+   OWNS: VAOs, VBOs, EBOs, vertex data
+
+   input: vertex data, index data
+   output: ready-to-draw mesh (used by renderer or entity)
+
+*/
+
 // Cube vertices with positions and UVs (no normals)
 static float cubeVertices[] = {
     // positions        // texcoords

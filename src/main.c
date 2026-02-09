@@ -10,39 +10,62 @@
 #include "mesh.h"
 #include "model.h"
 #include "input.h"
+#include "shader.h"
 #include <cglm/cglm.h>
+
+/*
+
+   main.c should only orchestrate the engine:
+   - create window
+   - initialize renderer, camera, textures, meshes, models
+   - update input
+   - update game state
+   - call renderer to draw the scene
+
+   it should NOT directly create VAOs, bind buffers, or manage shader compilation
+   it should NOT contain hardcoded geometry transformations inline
+
+   OWNS: high-level scene and engine orchestration
+
+   input: engine modules (renderer, camera, mesh, texture, model)
+   output: runs game loop, sends draw commands to renderer
+
+*/
 
 Camera camera;
 
-int main(void){
+int main(void) {
 
     Window window;
-    if(!window_create(&window,1920,1080,"Sandbox Room")) return 1;
+    if (!window_create(&window, 800, 600, "greybox")) return 1;
 
-    if(!renderer_init()) return 1;
+    if (!renderer_init()) return 1;
 
-    camera_init(&camera,(vec3){0.0f,1.0f,3.0f},(vec3){0.0f,1.0f,0.0f},-90.0f,0.0f);
+    camera_init(&camera, (vec3){0.0f,1.0f,3.0f}, (vec3){0.0f,1.0f,0.0f}, -90.0f, 0.0f);
     input_init(window.handle);
-	input_set_camera(&camera);
+    input_set_camera(&camera);
+
+    time_init();
 
     Texture floorTex, wallTex, cubeTex;
-    if(!texture_load(&floorTex,"assets/grass.png")) { fprintf(stderr,"Failed to load floor\n"); return 1; }
-    if(!texture_load(&wallTex,"assets/wall.jpg")) { fprintf(stderr,"Failed to load wall\n"); return 1; }
-    if(!texture_load(&cubeTex,"assets/cube.png")) { fprintf(stderr,"Failed to load cube\n"); return 1; }
+    if (!texture_load(&floorTex, "assets/grass.png") ||
+        !texture_load(&wallTex, "assets/wall.jpg") ||
+        !texture_load(&cubeTex, "assets/cube.png")) {
+        fprintf(stderr, "Failed to load textures\n");
+        return 1;
+    }
 
     Mesh cubeMesh, planeMesh;
     mesh_init_cube(&cubeMesh);
-    mesh_init_plane(&planeMesh, 1.0f, 1.0f, 1); // unit plane, scale in model
+    mesh_init_plane(&planeMesh, 1.0f, 1.0f, 1); // unit plane, scaling in model matrix
 
-	Model chair;
-	if(!model_load(&chair,"assets/source/Chair_Pack/Chair_Pack.obj")){
-    	fprintf(stderr,"Failed to load chair model\n");
-    	return 1;
-	}
+    Model chair;
+    if (!model_load(&chair, "assets/source/Chair_Pack/Chair_Pack.obj")) {
+        fprintf(stderr, "Failed to load chair model\n");
+        return 1;
+    }
 
-	// x,z,y
-    float roomW = 30.0f, roomD = 30.0f, roomH = 5.0f;
-
+    float roomW = 100.0f, roomD = 100.0f, roomH = 20.0f;
     vec3 cubePositions[5] = {
         {2.0f,0.5f,-2.0f},
         {-2.0f,0.5f,-1.0f},
@@ -51,117 +74,74 @@ int main(void){
         {0.0f,0.5f,0.0f}
     };
 
+    Shader basicShader;
+    shader_load(&basicShader, "shaders/vert.shdr", "shaders/frag.shdr");
+    renderer_set_shader(&basicShader);
+
     mat4 projection;
-    glm_perspective(glm_rad(45.0f),1920.0f/1080.0f,0.1f,100.0f,projection);
+    glm_perspective(glm_rad(45.0f), 1920.0f/1080.0f, 0.1f, 100.0f, projection);
     renderer_set_projection(projection);
 
-    unsigned int shader = renderer_get_shader_program();
-    glUseProgram(shader);
+    renderer_set_light((vec3){2.0f,4.0f,2.0f});
 
-	int lightPosLoc = glGetUniformLocation(shader, "lightPos");
-	glUniform3f(lightPosLoc, 2.0f, 4.0f, 2.0f);
-
-    glUniform1i(glGetUniformLocation(shader,"uTexture"),0);
-
-    while(!window_should_close(&window)){
-        time_update();
-        float deltaTime = time_get_delta();
+    while (!window_should_close(&window)) {
+        float deltaTime = time_update();
 
         input_update(window.handle, deltaTime, roomW, roomH, roomD);
 
-        glClearColor(0.53f,0.81f,0.92f,1.0f); // sky color
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderer_clear((vec4){0.53f, 0.81f, 0.92f, 1.0f}); // sky color
 
+        // camera view
         mat4 view;
-        camera_get_view_matrix(&camera,view);
+        camera_get_view_matrix(&camera, view);
         renderer_set_view(view);
 
-        mat4 model;
+        // draw floor
+        mat4 floorModel;
+        glm_mat4_identity(floorModel);
+        glm_scale(floorModel, (vec3){roomW,0.01f,roomD});
+        renderer_draw_mesh(&planeMesh, &floorTex, floorModel);
 
-		mat4 modelMat;
-		glm_mat4_identity(modelMat);
-		glm_translate(modelMat,(vec3){1.0f,0.0f,-1.0f});
-		glm_scale(modelMat,(vec3){0.5f,0.5f,0.5f}); // scale chair
-		renderer_set_model(modelMat);
-		model_draw(&chair);
+        // draw ceiling
+        mat4 ceilingModel;
+        glm_mat4_identity(ceilingModel);
+        glm_translate(ceilingModel, (vec3){0.0f, roomH, 0.0f});
+        glm_rotate(ceilingModel, glm_rad(180.0f), (vec3){1.0f,0.0f,0.0f});
+        glm_scale(ceilingModel, (vec3){roomW,0.01f,roomD});
+        renderer_draw_mesh(&planeMesh, &wallTex, ceilingModel);
 
-        glm_mat4_identity(model);
-        glm_scale(model,(vec3){roomW,0.01f,roomD});
-        glm_translate(model,(vec3){0.0f,0.0f,0.0f});
-        renderer_set_model(model);
-        texture_bind(&floorTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
+        // draw walls
+        renderer_draw_wall(&planeMesh, &wallTex, roomW, roomD, roomH);
 
-        glm_mat4_identity(model);
-        glm_translate(model,(vec3){0.0f,roomH,0.0f});
-        glm_rotate(model,glm_rad(180.0f),(vec3){1.0f,0.0f,0.0f}); // flip down
-        glm_scale(model,(vec3){roomW,0.01f,roomD});
-        renderer_set_model(model);
-        texture_bind(&wallTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
-
-
-        // --- Walls ---
-
-        glm_mat4_identity(model);
-        glm_translate(model,(vec3){-roomW/2, roomH/2,0.0f});
-        glm_rotate(model,glm_rad(90.0f),(vec3){0.0f,0.0f,1.0f});
-        glm_scale(model,(vec3){roomH,0.01f,roomD});
-        renderer_set_model(model);
-        texture_bind(&wallTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
-
-        glm_mat4_identity(model);
-        glm_translate(model,(vec3){roomW/2, roomH/2,0.0f});
-        glm_rotate(model,glm_rad(-90.0f),(vec3){0.0f,0.0f,1.0f});
-        glm_scale(model,(vec3){roomH,0.01f,roomD});
-        renderer_set_model(model);
-        texture_bind(&wallTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
-
-        glm_mat4_identity(model);
-        glm_translate(model,(vec3){0.0f, roomH/2, -roomD/2});
-        glm_rotate(model,glm_rad(90.0f),(vec3){1.0f,0.0f,0.0f});
-        glm_scale(model,(vec3){roomW,0.01f,roomH});
-        renderer_set_model(model);
-        texture_bind(&wallTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
-
-        glm_mat4_identity(model);
-        glm_translate(model,(vec3){0.0f, roomH/2, roomD/2});
-        glm_rotate(model,glm_rad(-90.0f),(vec3){1.0f,0.0f,0.0f});
-        glm_scale(model,(vec3){roomW,0.01f,roomH});
-        renderer_set_model(model);
-        texture_bind(&wallTex,0);
-        mesh_draw(&planeMesh);
-        texture_unbind();
-
-        texture_bind(&cubeTex,0);
-        for(int i=0;i<5;i++){
-            glm_mat4_identity(model);
-            glm_translate(model,cubePositions[i]);
+        // draw cubes
+        for (int i=0; i<5; i++) {
+            mat4 cubeModel;
+            glm_mat4_identity(cubeModel);
+            glm_translate(cubeModel, cubePositions[i]);
             float angle = (float)glfwGetTime()*25.0f + i*20.0f;
-            glm_rotate(model,glm_rad(angle),(vec3){0.0f,1.0f,0.0f});
-            renderer_set_model(model);
-            mesh_draw(&cubeMesh);
+            glm_rotate(cubeModel, glm_rad(angle), (vec3){0.0f,1.0f,0.0f});
+            renderer_draw_mesh(&cubeMesh, &cubeTex, cubeModel);
         }
-        texture_unbind();
+
+        // draw model
+        mat4 chairModel;
+        glm_mat4_identity(chairModel);
+        glm_translate(chairModel, (vec3){1.0f,0.0f,-1.0f});
+        glm_scale(chairModel, (vec3){0.5f,0.5f,0.5f});
+        renderer_draw_model(&chair, chairModel);
 
         window_update(&window);
     }
 
     mesh_destroy(&cubeMesh);
     mesh_destroy(&planeMesh);
-	model_destroy(&chair);
+    model_destroy(&chair);
     texture_destroy(&floorTex);
     texture_destroy(&wallTex);
     texture_destroy(&cubeTex);
     renderer_shutdown();
     window_destroy(&window);
+
     return 0;
 }
+
