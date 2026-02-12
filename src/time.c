@@ -8,8 +8,5 @@ float time_update(void) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-}
-
-float time_get_delta(void) {
     return deltaTime;
 }

@@ -37,15 +37,13 @@ Camera camera;
 int main(void) {
 
     Window window;
-    if (!window_create(&window, 800, 600, "redbox")) return 1;
+    if (!window_create(&window, WINDOW_WIDTH, WINDOW_HEIGHT, "redbox")) return 1;
 
     if (!renderer_init()) return 1;
 
     camera_init(&camera, (vec3){0.0f,1.0f,3.0f}, (vec3){0.0f,1.0f,0.0f}, -90.0f, 0.0f);
     input_init(window.handle);
     input_set_camera(&camera);
-
-    time_get_delta();
 
     Texture floorTex, wallTex, cubeTex;
     if (!texture_load(&floorTex, "assets/grass.png") ||
@@ -79,7 +77,7 @@ int main(void) {
     renderer_set_shader(&basicShader);
 
     mat4 projection;
-    glm_perspective(glm_rad(45.0f), 1920.0f/1080.0f, 0.1f, 100.0f, projection);
+    glm_perspective(glm_rad(45.0f), WINDOW_WIDTH/WINDOW_HEIGHT, 0.1f, 100.0f, projection);
     renderer_set_projection(projection);
 
     renderer_set_light((vec3){2.0f,4.0f,2.0f});
