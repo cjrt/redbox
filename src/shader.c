@@ -33,6 +33,15 @@ static unsigned int compile(unsigned int type, const char* src) {
     unsigned int s = glCreateShader(type);
     glShaderSource(s, 1, &src, NULL);
     glCompileShader(s);
+
+    int success;
+    char infoLog[512];
+    glGetShaderiv(s, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(s, 512, NULL, infoLog);
+        fprintf(stderr, "Shader compilation error: %s\n", infoLog);
+    }
+
     return s;
 }
 
@@ -46,6 +55,15 @@ bool shader_load(Shader* shader,
 
     unsigned int vs = compile(GL_VERTEX_SHADER, vs_src);
     unsigned int fs = compile(GL_FRAGMENT_SHADER, fs_src);
+
+	int success;
+	char info[512];
+	glGetProgramiv(shader->id, GL_LINK_STATUS, &success);
+	if (!success) {
+    	glGetProgramInfoLog(shader->id, 512, NULL, info);
+    	fprintf(stderr, "Shader program link error: %s\n", info);
+	}
+
 
     free(vs_src);
     free(fs_src);

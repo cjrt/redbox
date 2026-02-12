@@ -3,6 +3,10 @@
 
 typedef struct {
     unsigned int id;
+    int modelLoc;
+    int viewLoc;
+    int projLoc;
+    int lightPosLoc;
 } Shader;
 
 bool shader_load(Shader* shader,

@@ -6,7 +6,7 @@ LIBS    = -lglfw -ldl -lm -lGL $(shell pkg-config --libs assimp)   # add assimp 
 
 SRC_DIR = src
 OBJ_DIR = build
-BIN     = greybox
+BIN     = redbox
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SOURCES))

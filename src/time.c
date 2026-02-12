@@ -4,7 +4,7 @@
 static float deltaTime = 0.0f;
 static float lastFrame = 0.0f;
 
-void time_update(void) {
+float time_update(void) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;

@@ -37,7 +37,7 @@ Camera camera;
 int main(void) {
 
     Window window;
-    if (!window_create(&window, 800, 600, "greybox")) return 1;
+    if (!window_create(&window, 800, 600, "redbox")) return 1;
 
     if (!renderer_init()) return 1;
 
@@ -45,7 +45,7 @@ int main(void) {
     input_init(window.handle);
     input_set_camera(&camera);
 
-    time_init();
+    time_get_delta();
 
     Texture floorTex, wallTex, cubeTex;
     if (!texture_load(&floorTex, "assets/grass.png") ||
