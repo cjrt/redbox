@@ -1,5 +1,5 @@
 CC      = clang
-CFLAGS  = -Wall -Wextra -std=c11
+CFLAGS  = -Wall -Wextra -std=c11 # add -g and -00 before u compile for a valgrind test
 INCLUDES= -Iinclude $(shell pkg-config --cflags assimp)   # add assimp includes
 
 LIBS    = -lglfw -ldl -lm -lGL $(shell pkg-config --libs assimp)   # add assimp libs
