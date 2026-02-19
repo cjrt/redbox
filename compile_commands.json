@@ -1,0 +1,178 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/camera.o",
+      "src/camera.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/camera.c",
+    "output": "/home/cjt/Documents/current/redbox/build/camera.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/glad.o",
+      "src/glad.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/glad.c",
+    "output": "/home/cjt/Documents/current/redbox/build/glad.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/input.o",
+      "src/input.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/input.c",
+    "output": "/home/cjt/Documents/current/redbox/build/input.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/main.c",
+    "output": "/home/cjt/Documents/current/redbox/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/mesh.o",
+      "src/mesh.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/mesh.c",
+    "output": "/home/cjt/Documents/current/redbox/build/mesh.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/model.o",
+      "src/model.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/model.c",
+    "output": "/home/cjt/Documents/current/redbox/build/model.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/renderer.o",
+      "src/renderer.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/renderer.c",
+    "output": "/home/cjt/Documents/current/redbox/build/renderer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/shader.o",
+      "src/shader.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/shader.c",
+    "output": "/home/cjt/Documents/current/redbox/build/shader.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/texture.o",
+      "src/texture.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/texture.c",
+    "output": "/home/cjt/Documents/current/redbox/build/texture.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/time.o",
+      "src/time.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/time.c",
+    "output": "/home/cjt/Documents/current/redbox/build/time.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "build/window.o",
+      "src/window.c"
+    ],
+    "directory": "/home/cjt/Documents/current/redbox",
+    "file": "/home/cjt/Documents/current/redbox/src/window.c",
+    "output": "/home/cjt/Documents/current/redbox/build/window.o"
+  }
+]
