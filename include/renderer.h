@@ -6,6 +6,8 @@
 #include "texture.h"
 #include <cglm/cglm.h>
 
+typedef enum { PLANE_FLOOR, PLANE_WALL_X, PLANE_WALL_Z } PlaneType;
+
 bool renderer_init(void);
 
 void renderer_shutdown(void);
@@ -24,5 +26,5 @@ void renderer_draw_mesh(const Mesh *mesh, const Texture *tex, mat4 model);
 
 void renderer_draw_model(const Model *model, mat4 modelMatrix);
 
-void renderer_draw_room(const Mesh *plane, const Texture *tex, float roomW,
-                        float roomD, float roomH);
+void renderer_draw_quad(const Mesh *plane, const Texture *tex, vec3 pos,
+                        float width, float height, PlaneType type);

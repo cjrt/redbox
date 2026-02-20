@@ -111,35 +111,27 @@ void renderer_draw_model(const Model *model, mat4 modelMatrix) {
   model_draw((Model *)model);
 }
 
-void renderer_draw_room(const Mesh *plane, const Texture *tex, float roomW,
-                        float roomD, float roomH) {
+void renderer_draw_quad(const Mesh *mesh, const Texture *tex, vec3 pos,
+                        float width, float height, PlaneType type) {
   mat4 model;
-
-  // left wall
   glm_mat4_identity(model);
-  glm_translate(model, (vec3){-roomW / 2, roomH / 2, 0.0f});
-  glm_rotate(model, glm_rad(90.0f), (vec3){0.0f, 0.0f, 1.0f});
-  glm_scale(model, (vec3){roomH, 0.01f, roomD});
-  renderer_draw_mesh(plane, tex, model);
 
-  // right wall
-  glm_mat4_identity(model);
-  glm_translate(model, (vec3){roomW / 2, roomH / 2, 0.0f});
-  glm_rotate(model, glm_rad(-90.0f), (vec3){0.0f, 0.0f, 1.0f});
-  glm_scale(model, (vec3){roomH, 0.01f, roomD});
-  renderer_draw_mesh(plane, tex, model);
+  // position
+  glm_translate(model, pos);
 
-  // back wall
-  // glm_mat4_identity(model);
-  // glm_translate(model, (vec3){0.0f, roomH / 2, -roomD / 2});
-  // glm_rotate(model, glm_rad(90.0f), (vec3){1.0f, 0.0f, 0.0f});
-  // glm_scale(model, (vec3){roomW, 0.01f, roomH});
-  // renderer_draw_mesh(plane, tex, model);
+  // rotate based on axis
+  if (type == PLANE_WALL_X) {
+    // X-axis (Sides)
+    glm_rotate(model, glm_rad(90.0f), (vec3){0.0f, 0.0f, 1.0f});
+    glm_scale(model, (vec3){height, 0.01f, width});
+  } else if (type == PLANE_WALL_Z) {
+    // Z-axis (Front/Back)
+    glm_rotate(model, glm_rad(90.0f), (vec3){1.0f, 0.0f, 0.0f});
+    glm_scale(model, (vec3){width, 0.01f, height});
+  } else {
+    // floor/ceiling (Flat on XZ plane)
+    glm_scale(model, (vec3){width, 1.0f, height});
+  }
 
-  // front wall
-  glm_mat4_identity(model);
-  glm_translate(model, (vec3){0.0f, roomH / 2, roomD / 2});
-  glm_rotate(model, glm_rad(-90.0f), (vec3){1.0f, 0.0f, 0.0f});
-  glm_scale(model, (vec3){roomW, 0.01f, roomH});
-  renderer_draw_mesh(plane, tex, model);
+  renderer_draw_mesh(mesh, tex, model);
 }

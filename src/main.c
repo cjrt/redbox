@@ -95,11 +95,14 @@ int main(void) {
     camera_get_view_matrix(&camera, view);
     renderer_set_view(view);
 
-    // draw floor
-    mat4 floorModel;
-    glm_mat4_identity(floorModel);
-    glm_scale(floorModel, (vec3){roomW, 0.01f, roomD});
-    renderer_draw_mesh(&planeMesh, &floorTex, floorModel);
+    // floor 
+    renderer_draw_quad(&planeMesh, &floorTex, (vec3){0, 0, 0}, roomW, roomD, PLANE_FLOOR);
+
+    // front wall
+    renderer_draw_quad(&planeMesh, &wallTex, (vec3){0.0f, 1.5f, -5.0f}, 5.0f, 3.0f, PLANE_WALL_Z);
+
+    // side wall
+    renderer_draw_quad(&planeMesh, &wallTex, (vec3){3.0f, 1.5f, 0.0f}, 4.0f, 3.0f, PLANE_WALL_X);
 
     // draw model
     mat4 chairModel;
